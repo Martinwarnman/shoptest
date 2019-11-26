@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="no-js"> 
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <link rel='stylesheet prefetch' href='https://cdn.jsdelivr.net/foundation/5.0.2/css/foundation.css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+
+
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+span.price {
+  float: right;
+  color: grey;
+}
+
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+</style>
+    </head>
+    <body>
+            
+  
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">Simple cart</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+        
+                <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                    <ul class="navbar-nav m-auto">
+                        <li class="nav-item m-auto">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="kassa.html">cart</a>
+                    </ul>
+        
+                    <form class="form-inline my-2 my-lg-0">
+                        <div class="input-group input-group-sm">
+                          
+                               
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </nav>
+     <body>
+                <div class="row">
+                  <div class="col-75">
+                    <div class="container">
+                      <form action="/action_page.php">
+                      
+                        <div class="row">
+                          <div class="col-50">
+                            <h3>Billing Address</h3>
+                            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                            <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
+                            <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                            <input type="text" id="email" name="email" placeholder="john@example.com">
+                            <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
+                            <input type="text" id="adr" name="address" placeholder="542 W. 15th Street">
+                            <label for="city"><i class="fa fa-institution"></i> City</label>
+                            <input type="text" id="city" name="city" placeholder="New York">
+                
+                            <div class="row">
+                          
+                              <div class="col-50">
+                                <label for="zip">Zip</label>
+                                <input type="text" id="zip" name="zip" placeholder="10001">
+                              </div>
+                            </div>
+                          </div>
+                
+                          <div class="col-50">
+                           <br>
+                        <input type="submit" value="Continue to checkout" class="btn">
+                      </form>
+                    </div>
+                  </div>
+                  <div class="col-25">
+                    <div class="container">             
+                      <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i><b id="ammo" ></b></span></h4>
+                      <p><a></a> <span class="price" id="tabell"></span></p>
+                      <hr>
+                      <p>Total <span class="price" style="color:black"><b id="summa"></b>€</span></p>
+
+                    </div>
+                  </div>
+                </div>
+                <script>
+             let products =JSON.parse(sessionStorage.getItem("products"));    
+             let cart =JSON.parse(sessionStorage.getItem("cart"));      
+                   
+           // Retrieve
+           function getProducts(id, products){
+               return products.filter(word=>word.id == id)[0]
+           }
+         let tabell ="<tabell>";
+         let summa =0;
+         let ammo=0;
+         if(cart!=null){
+           console.log(products.length);
+           
+         for (let i = 0; i < cart.length; i++) {
+             let prod = getProducts(cart[i].id, products);
+             tabell += `<tr><td>${prod.make} ${prod.model}</td></tr> ${cart[i].amount}st</td><td> ${prod.price}€ </td></tr><br>`
+             summa +=prod.price*cart[i].amount;
+             ammo+=cart[i].amount;
+         }
+         tabell += "</tabell>";
+         $("#tabell").html(tabell)
+         $("#summa").html(summa)
+         $("#ammo").html(ammo)
+
+         console.log("tab "+tabell)
+         }
+                     </script>
+            </body>
+</html>
