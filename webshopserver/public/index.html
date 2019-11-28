@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shopping cart</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+ 
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+.lighter-text {
+  color: #ABB0BE;
+}
+
+.bloc_left_price {
+    color: #c01508;
+    text-align: center;
+    font-weight: bold;
+    font-size: 150%;
+}
+.category_block li:hover {
+    background-color: #007bff;
+}
+.category_block li:hover a {
+    color: #ffffff;
+}
+.category_block li a {
+    color: #343a40;
+}
+.add_to_cart_block .price {
+    color: #c01508;
+    text-align: center;
+    font-weight: bold;
+    font-size: 200%;
+    margin-bottom: 0;
+}
+.add_to_cart_block .price_discounted {
+    color: #343a40;
+    text-align: center;
+    text-decoration: line-through;
+    font-size: 140%;
+}
+.product_rassurance {
+    padding: 10px;
+    margin-top: 15px;
+    background: #ffffff;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+}
+.product_rassurance .list-inline {
+    margin-bottom: 0;
+    text-transform: uppercase;
+    text-align: center;
+}
+.product_rassurance .list-inline li:hover {
+    color: #343a40;
+}
+.reviews_product .fa-star {
+    color: gold;
+}
+.pagination {
+    margin-top: 20px;
+}
+footer {
+    background: #343a40;
+    padding: 40px;
+}
+footer a {
+    color: #f8f9fa!important
+}
+
+
+    </style>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">Simple Ecommerce</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+            
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                        <ul class="navbar-nav m-auto">
+                            <li class="nav-item m-auto">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="kassa.html">cart</a>
+                            </li>
+         
+                        </ul>
+            
+                        <form class="form-inline my-2 my-lg-0">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Search...">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-secondary btn-number">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <a class="btn btn-success btn-sm ml-3" id="cart" href="kassa.html">
+                                <i class="fa fa-shopping-cart"></i> Cart
+                                <span id="cartamount" class="badge badge-light"></span>
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+            <div class="shopping-cart"><a onclick="filterByCategory('bil')">Bil</a>
+                <a onclick="filterByCategory('car')">car</a>
+                <a onclick="filterByCategory('truck')">truck</a>
+                <a onclick="filterByCategory('båt')">boat</a>
+                <a onclick="showProducts()">ShowAll</a>
+            </div>
+    <div id="products"></div>
+    <script>
+   /* function getCartProductAmount(){
+        var cart = JSON.parse(sessionStorage.getItem("cart"));
+        console.log(cart)
+    }*/
+    var cart = JSON.parse(sessionStorage.getItem("cart"));
+    console.log(cart)
+    $( document ).ready(function() {
+      
+        if(cart!=null){
+            $("#cartamount").html(cart.length);
+        }else{
+          cart=[];
+
+        }
+      getProducts()   
+        
+    
+    });
+   
+    
+    console.log(cart);
+    function showProducts(products=false){
+
+    if(products==false) {
+    products=JSON.parse(sessionStorage.getItem("products"))
+    }
+        let title="",text=""
+        $("#products").html("");
+                    for(let i = 0 ; i < products.length ; i++){
+                        title = products[i].name;
+                        text = products[i].desc;//"Den bästaste bilen"
+                        price = products[i].price;
+                        id =  products[i].id;
+
+                        $("#products").append(product(id,title,text,price)) 
+
+                    }    
+                }     
+                
+        function addToCart( id, amount=1){
+            console.log("Adding " + id + " :: " + amount)
+            if(productInCart(id)){
+                //Update amount
+                cart[cart.findIndex(x => x.id === id)].amount++;
+                console.log(cart)    
+            }else{
+            //push an object into array
+                cart.push({id:id, amount: amount})
+                console.log(cart)
+            }
+            sessionStorage.setItem("cart",JSON.stringify(cart));
+            $("#cartamount").html(cart.length)
+        }
+        function productInCart(id){
+            //Checks if the product is in cart, if it is just add amount to it.
+            if(cart.filter( word => word.id == id).length)
+                return true;
+            return false;
+        }
+
+        function getProducts(){
+$.getJSON( "http://localhost:3000/getProducts", function( data ){
+  console.log(data);
+showProducts(data);
+sessionStorage.setItem("products",JSON.stringify(data));
+  }
+  
+)}
+
+        function filterByCategory(cat){
+                        
+            showProducts(JSON.parse(sessionStorage.getItem("products")).filter(word => word.category == cat));
+        }
+        function filterByprice(low,high){
+                        
+                        showProducts(filter(word => word.category == low>high));
+                    }
+
+        function product(id, title, text, price,image="https://dummyimage.com/286x180/000/fff"){
+            let product = `<div data="${id}" style="float:left;" class="card product" style="width: 18rem;">
+                <img class="card-img-top" src="${image}" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">${title}</h5>
+                  <p class="card-text">${text}</p>
+                  <p class="card-text">${price}€</p>
+
+                  <a onclick="addToCart(${id},1)" class="btn btn-primary addtocartbutton">Lägg i varukorg</a>
+                </div>
+              </div>`
+              return product;
+        }
+        function clickShoppingCart(){
+            console.log("click sc")
+        }
+
+        //sparar 
+
+        
+         /* $(function() {
+                $.getJSON("http://www.optival.fi/products.json", function(result){
+                    let title="",text=""
+                    for(let i = 0 ; i < result.length ; i++){
+                        title=result[i].make;
+                        text = "Den bästaste bilen"
+                        $("#products").append(product(title,text))  
+                        console.log(result[i].make)
+                    }
+                });
+        });*/
+
+      
+
+
+    </script>
+</body>
+</html>
